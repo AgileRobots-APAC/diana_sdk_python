@@ -1286,6 +1286,48 @@ def setDefaultActiveTcpPose(arrPose, ipAddress=''):
     return message(ret)
 
 
+def addTcpPose(strToolName, arrPose, ipAddress=''):
+    tcpPose = DIANA_TCP_VECTOR()
+    tcpPose.values = (c_double*6)()
+    for index in range(0, len(tcpPose.values)):
+        tcpPose.values[index] = arrPose[index]
+    api_mod.addTcpPose.argtypes = [
+        c_char_p, POINTER(DIANA_TCP_VECTOR), c_char_p]
+    api_mod.addTcpPose.restype = c_int
+    ret = api_mod.addTcpPose(
+        bytes(strToolName.encode('utf-8')), tcpPose, bytes(ipAddress.encode('utf-8')))
+    return message(ret)
+
+
+def setTcpPoseByTcpName(strToolName, arrPose, ipAddress=''):
+    tcpPose = DIANA_TCP_VECTOR()
+    tcpPose.values = (c_double*6)()
+    for index in range(0, len(tcpPose.values)):
+        tcpPose.values[index] = arrPose[index]
+    api_mod.setTcpPoseByTcpName.argtypes = [
+        c_char_p, POINTER(DIANA_TCP_VECTOR), c_char_p]
+    api_mod.setTcpPoseByTcpName.restype = c_int
+    ret = api_mod.setTcpPoseByTcpName(
+        bytes(strToolName.encode('utf-8')), tcpPose, bytes(ipAddress.encode('utf-8')))
+    return message(ret)
+
+
+def deleteTcpPoseByTcpName(strToolName, ipAddress=''):
+    api_mod.deleteTcpPoseByTcpName.argtypes = [c_char_p, c_char_p]
+    api_mod.deleteTcpPoseByTcpName.restype = c_int
+    ret = api_mod.deleteTcpPoseByTcpName(
+        bytes(strToolName.encode('utf-8')), bytes(ipAddress.encode('utf-8')))
+    return message(ret)
+
+
+def switchTcpPoseByTcpName(strToolName, ipAddress=''):
+    api_mod.switchTcpPoseByTcpName.argtypes = [c_char_p, c_char_p]
+    api_mod.switchTcpPoseByTcpName.restype = c_int
+    ret = api_mod.switchTcpPoseByTcpName(
+        bytes(strToolName.encode('utf-8')), bytes(ipAddress.encode('utf-8')))
+    return message(ret)
+
+
 def setResultantCollision(force, ipAddress=''):
     api_mod.setResultantCollision.argtypes = [c_double, c_char_p]
     api_mod.setResultantCollision.restype = c_int
@@ -1570,7 +1612,7 @@ def servoL_ex(tcp_pose, t=0.01, ah_t=0.01, gain=300, scale=1000, realiable=False
         dianaTcpPose.values[index] = tcp_pose[index]
     active_tcp = c_void_p(0)
     api_mod.servoL_ex.argtypes = [POINTER(
-        DIANA_TCP_POSE), c_double, c_double, c_double, c_double, c_bool, c_void_p, c_char_p]
+        DIANA_TCP_POSE), c_double, c_double, c_double, c_double, c_void_p, c_bool, c_char_p]
     api_mod.servoL_ex.restype = c_int
     ret = api_mod.servoL_ex(dianaTcpPose, t, ah_t, gain,
                             scale, realiable, active_tcp, bytes(ipAddress.encode('utf-8')))
@@ -1754,8 +1796,8 @@ def runComplexPath(complex_path_id, ipAddress=''):
 def destroyComplexPath(complex_path_id, ipAddress=''):
     api_mod.destroyComplexPath.argtypes = [c_uint, c_char_p]
     api_mod.destroyComplexPath.restype = c_int
-    ret = api_mod.destroyComplexPath(
-        complex_path_id, bytes(ipAddress.encode('utf-8')))
+    ret = api_mod.destroyComplexPath(complex_path_id, bytes(
+        ipAddress.encode('utf-8')), bytes(ipAddress.encode('utf-8')))
     return message(ret)
 
 
